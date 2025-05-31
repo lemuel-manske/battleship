@@ -1,0 +1,8 @@
+[versions]
+junitVersion = "5.10.0"
+
+[libraries]
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
