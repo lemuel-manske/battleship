@@ -5,18 +5,18 @@ class Fleet {
     private static final int MAX_ROWS = 10;
     private static final int MAX_COLS = 10;
 
-    private final Ship[][] grid;
+    private final Ship[][] ships;
     private final boolean[][] compromised;
 
     public Fleet() {
-        grid = new Ship[MAX_ROWS][MAX_COLS];
+        ships = new Ship[MAX_ROWS][MAX_COLS];
         compromised = new boolean[MAX_ROWS][MAX_COLS];
     }
 
     public void placeShipHorizontally(Ship ship, Coordinate initialCoords) {
         Coordinate finalCoords = initialCoords.goRightBy(ship.size());
 
-        if (!isWithinBounds(initialCoords) || !isWithinBounds(finalCoords)) {
+        if (canMakePath(initialCoords, finalCoords)) {
             throw new OutOfFleetBoundsException();
         }
 
@@ -26,7 +26,7 @@ class Fleet {
     public void placeShipVertically(Ship ship, Coordinate initialCoords) {
         Coordinate finalCoords = initialCoords.goDownBy(ship.size());
 
-        if (!isWithinBounds(initialCoords) || !isWithinBounds(finalCoords)) {
+        if (canMakePath(initialCoords, finalCoords)) {
             throw new OutOfFleetBoundsException();
         }
 
@@ -34,21 +34,25 @@ class Fleet {
     }
 
     private void placeShipAlongPath(Ship ship, Coordinate[] path) {
-        for (Coordinate pos : path) {
-            if (isCompromised(pos)) {
+        for (Coordinate c : path) {
+            if (isCompromised(c)) {
                 throw new CoordinateAlreadyOccupiedException();
             }
         }
 
         for (Coordinate c : path) {
-            grid[c.y()][c.x()] = ship;
+            ships[c.y()][c.x()] = ship;
             compromised[c.y()][c.x()] = true;
             compromiseNearbyCoordinates(c);
         }
     }
 
     public Ship shipAt(Coordinate pos) {
-        return grid[pos.y()][pos.x()];
+        return ships[pos.y()][pos.x()];
+    }
+
+    private boolean canMakePath(Coordinate start, Coordinate end) {
+        return !isWithinBounds(start) || !isWithinBounds(end);
     }
 
     private boolean isCompromised(Coordinate pos) {

@@ -48,9 +48,9 @@ public class Coordinate {
     }
 
     public Coordinate[] goRightUntil(Coordinate finalCoords) {
-        Coordinate[] path = new Coordinate[finalCoords.x - this.x + 1];
+        Coordinate[] path = new Coordinate[finalCoords.x - x];
 
-        for (int i = 0; i <= finalCoords.x - this.x; i++) {
+        for (int i = 0; i < finalCoords.x - x; i++) {
             path[i] = goRightBy(i);
         }
 
@@ -58,9 +58,9 @@ public class Coordinate {
     }
 
     public Coordinate[] goDownUntil(Coordinate finalCoords) {
-        Coordinate[] path = new Coordinate[finalCoords.y - this.y + 1];
+        Coordinate[] path = new Coordinate[finalCoords.y - y];
 
-        for (int i = 0; i <= finalCoords.y - this.y; i++) {
+        for (int i = 0; i < finalCoords.y - y; i++) {
             path[i] = goDownBy(i);
         }
 

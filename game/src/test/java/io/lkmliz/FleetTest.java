@@ -1,5 +1,6 @@
 package io.lkmliz;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -76,6 +77,17 @@ class FleetTest {
             assertThatShipIsAtCoordinateMovingDown(aShip, coords);
         }
 
+        @Test
+        void whenShipIsPlacedAtFreeCoordinate_ThenShipTakesJustEnoughToFitItsSize() {
+            Ship aShip = Ship.patrolBoat();
+
+            Coordinate coords = Coordinate.valueOf(2, 4);
+
+            fleet.placeShipHorizontally(aShip, coords);
+
+            assertNoShipAt(coords.goRightBy(aShip.size()));
+        }
+
         @Nested
         class AndShipIsPlacedAtFreeCoordinate {
 
@@ -88,8 +100,6 @@ class FleetTest {
                 alreadyPlacedShipCoords = Coordinate.valueOf(2, 4);
 
                 fleet.placeShipHorizontally(alreadyPlacedShip, alreadyPlacedShipCoords);
-
-                assertThatShipIsAtCoordinateMovingRight(alreadyPlacedShip, alreadyPlacedShipCoords);
             }
 
             @Test
@@ -99,7 +109,7 @@ class FleetTest {
 
             @Test
             void whenAnotherShipIsPlacedNearAtAlreadyPlacedOne_ThenThrowCoordinateAlreadyOccupiedException() {
-                assertThatNearbyCoordinatesAreOccupied(alreadyPlacedShipCoords, anyShip());
+                assertThatNearbyCoordinatesAreOccupied(alreadyPlacedShipCoords);
             }
 
             @Test
@@ -110,18 +120,31 @@ class FleetTest {
             }
 
             @Test
-            void whenAnotherShipIsPlacedAwayFromAlreadyPlacedOne_ButShipsSizeWillInvadeCompromisedAreaVertically__ThenThrowCoordinateAlreadyOccupiedException() {
+            void whenAnotherShipIsPlacedAwayFromAlreadyPlacedOne_ButShipsSizeWillInvadeCompromisedAreaVertically_ThenThrowCoordinateAlreadyOccupiedException() {
+                assertThatShipsInvadeOccupiedAreaVertically(Ship.patrolBoat(), alreadyPlacedShipCoords.goUpBy(Ship.patrolBoat().size()));
+            }
+
+            @Test
+            void whenAnotherShipIsPlacedAwayFromAlreadyPlacedOne_AndFitsIntoCoordinates_ThenShipIsPlaced() {
                 Ship shipToPlace = Ship.patrolBoat();
 
-                assertThatShipsInvadeOccupiedAreaVertically(shipToPlace, alreadyPlacedShipCoords.goUpBy(shipToPlace.size()));
+                Coordinate coords = alreadyPlacedShipCoords.goRightBy(alreadyPlacedShip.size() + 1);
+
+                fleet.placeShipVertically(shipToPlace, coords);
+
+                assertThatShipIsAtCoordinateMovingDown(shipToPlace, coords);
             }
 
-            private void assertThatShipsInvadeOccupiedAreaVertically(Ship shipToPlace, Coordinate coordinate) {
-                assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipVertically(shipToPlace, coordinate));
+            @Test
+            void whenTryingToPlaceShip_AndItTouchesAlreadyPlacedOneDiagonally_ThenThrowCoordinateAlreadyOccupiedException() {
+                assertThatShipsInvadeOccupiedAreaHorizontally(Ship.patrolBoat(), Coordinate.valueOf(0, 3));
             }
 
-            private void assertThatShipsInvadeOccupiedAreaHorizontally(Ship ship, Coordinate coords) {
-                assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(ship, coords));
+            @Test
+            void whenShipIsPlacedBetweenTwoOtherShips_ThenThrowCoordinateAlreadyOccupiedException() {
+                fleet.placeShipHorizontally(Ship.patrolBoat(), alreadyPlacedShipCoords.goUpBy(2));
+
+                assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(Ship.patrolBoat(), alreadyPlacedShipCoords.goUpBy(1)));
             }
 
             private void assertThatShipIsAlreadyPlacedMovingRight(Coordinate coords, Ship aShip) {
@@ -129,12 +152,6 @@ class FleetTest {
                     Coordinate goneRight = coords.goRightBy(i);
 
                     assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(aShip, goneRight));
-                }
-            }
-
-            private void assertThatNearbyCoordinatesAreOccupied(Coordinate coords, Ship aShip) {
-                for (Coordinate c : coords.getNearbyCoordinates()) {
-                    assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(aShip, c));
                 }
             }
         }
@@ -149,6 +166,24 @@ class FleetTest {
     private void assertThatShipIsAtCoordinateMovingDown(Ship ship, Coordinate expectedCoords) {
         for (int i = 0; i < ship.size(); i++) {
             assertSame(ship, fleet.shipAt(expectedCoords.goDownBy(i)));
+        }
+    }
+
+    private void assertThatShipsInvadeOccupiedAreaVertically(Ship shipToPlace, Coordinate coordinate) {
+        assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipVertically(shipToPlace, coordinate));
+    }
+
+    private void assertThatShipsInvadeOccupiedAreaHorizontally(Ship ship, Coordinate coords) {
+        assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(ship, coords));
+    }
+
+    private void assertNoShipAt(Coordinate coords) {
+        assertNull(fleet.shipAt(coords));
+    }
+
+    private void assertThatNearbyCoordinatesAreOccupied(Coordinate coords) {
+        for (Coordinate c : coords.getNearbyCoordinates()) {
+            assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(anyShip(), c));
         }
     }
 
