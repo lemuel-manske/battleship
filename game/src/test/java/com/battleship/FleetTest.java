@@ -1,4 +1,4 @@
-package io.lkmliz;
+package com.battleship;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;

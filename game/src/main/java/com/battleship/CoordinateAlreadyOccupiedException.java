@@ -1,4 +1,4 @@
-package io.lkmliz;
+package com.battleship;
 
 public class CoordinateAlreadyOccupiedException extends RuntimeException {
 }
