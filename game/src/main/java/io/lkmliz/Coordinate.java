@@ -22,28 +22,48 @@ public class Coordinate {
         return y;
     }
 
-    public Coordinate goRight(int by) {
+    public Coordinate goRightBy(int by) {
         return new Coordinate(this.x + by, y);
     }
 
-    public Coordinate goDown(int by) {
+    public Coordinate goDownBy(int by) {
         return new Coordinate(x, this.y + by);
     }
 
-    public Coordinate goLeft(int by) {
+    public Coordinate goLeftBy(int by) {
         return new Coordinate(this.x - by, y);
     }
 
-    public Coordinate goUp(int by) {
+    public Coordinate goUpBy(int by) {
         return new Coordinate(x, this.y - by);
     }
 
     public Coordinate[] getNearbyCoordinates() {
         return new Coordinate[] {
-            goRight(1), goDown(1),
-            goLeft(1), goUp(1),
-            goRight(1).goDown(1), goLeft(1).goUp(1),
-            goRight(1).goUp(1), goLeft(1).goDown(1)
+            goRightBy(1), goDownBy(1),
+            goLeftBy(1), goUpBy(1),
+            goRightBy(1).goDownBy(1), goLeftBy(1).goUpBy(1),
+            goRightBy(1).goUpBy(1), goLeftBy(1).goDownBy(1)
         };
+    }
+
+    public Coordinate[] goRightUntil(Coordinate finalCoords) {
+        Coordinate[] path = new Coordinate[finalCoords.x - this.x + 1];
+
+        for (int i = 0; i <= finalCoords.x - this.x; i++) {
+            path[i] = goRightBy(i);
+        }
+
+        return path;
+    }
+
+    public Coordinate[] goDownUntil(Coordinate finalCoords) {
+        Coordinate[] path = new Coordinate[finalCoords.y - this.y + 1];
+
+        for (int i = 0; i <= finalCoords.y - this.y; i++) {
+            path[i] = goDownBy(i);
+        }
+
+        return path;
     }
 }

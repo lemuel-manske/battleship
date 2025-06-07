@@ -13,33 +13,37 @@ class Fleet {
         compromised = new boolean[MAX_ROWS][MAX_COLS];
     }
 
-    public void placeShipHorizontally(Ship ship, Coordinate coords) {
-        validateShipCoords(ship, coords);
+    public void placeShipHorizontally(Ship ship, Coordinate initialCoords) {
+        Coordinate finalCoords = initialCoords.goRightBy(ship.size());
 
-        for (int i = 0; i < ship.size(); i++) {
-            if (isCompromised(coords.goRight(i))) {
-                throw new CoordinateAlreadyOccupiedException();
-            }
+        if (!isWithinBounds(initialCoords) || !isWithinBounds(finalCoords)) {
+            throw new OutOfFleetBoundsException();
         }
 
-        for (int i = coords.x(); i < coords.x() + ship.size(); i++) {
-            grid[coords.y()][i] = ship;
-            compromiseNearbyCoordinates(coords.goRight(i - coords.x()));
-        }
+        placeShipAlongPath(ship, initialCoords.goRightUntil(finalCoords));
     }
 
-    public void placeShipVertically(Ship ship, Coordinate coords) {
-        validateShipCoords(ship, coords);
+    public void placeShipVertically(Ship ship, Coordinate initialCoords) {
+        Coordinate finalCoords = initialCoords.goDownBy(ship.size());
 
-        for (int i = 0; i < ship.size(); i++) {
-            if (isCompromised(coords.goDown(i))) {
+        if (!isWithinBounds(initialCoords) || !isWithinBounds(finalCoords)) {
+            throw new OutOfFleetBoundsException();
+        }
+
+        placeShipAlongPath(ship, initialCoords.goDownUntil(finalCoords));
+    }
+
+    private void placeShipAlongPath(Ship ship, Coordinate[] path) {
+        for (Coordinate pos : path) {
+            if (isCompromised(pos)) {
                 throw new CoordinateAlreadyOccupiedException();
             }
         }
 
-        for (int i = coords.y(); i < coords.y() + ship.size(); i++) {
-            grid[i][coords.x()] = ship;
-            compromiseNearbyCoordinates(coords.goDown(i - coords.y()));
+        for (Coordinate c : path) {
+            grid[c.y()][c.x()] = ship;
+            compromised[c.y()][c.x()] = true;
+            compromiseNearbyCoordinates(c);
         }
     }
 
@@ -47,22 +51,8 @@ class Fleet {
         return grid[pos.y()][pos.x()];
     }
 
-    private void validateShipCoords(Ship ship, Coordinate coords) {
-        if (!isWithinBounds(coords) || !shipSizeFitsCoordinate(ship, coords)) {
-            throw new OutOfFleetBoundsException();
-        }
-
-        if (shipAt(coords) != null) {
-            throw new CoordinateAlreadyOccupiedException();
-        }
-    }
-
     private boolean isCompromised(Coordinate pos) {
         return compromised[pos.y()][pos.x()];
-    }
-
-    private boolean shipSizeFitsCoordinate(Ship ship, Coordinate pos) {
-        return isWithinBounds(pos.goRight(ship.size()));
     }
 
     private void compromiseNearbyCoordinates(Coordinate coords) {
