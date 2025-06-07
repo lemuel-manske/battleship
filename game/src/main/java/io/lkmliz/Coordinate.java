@@ -29,4 +29,21 @@ public class Coordinate {
     public Coordinate goDown(int by) {
         return new Coordinate(x, this.y + by);
     }
+
+    public Coordinate goLeft(int by) {
+        return new Coordinate(this.x - by, y);
+    }
+
+    public Coordinate goUp(int by) {
+        return new Coordinate(x, this.y - by);
+    }
+
+    public Coordinate[] getNearbyCoordinates() {
+        return new Coordinate[] {
+            goRight(1), goDown(1),
+            goLeft(1), goUp(1),
+            goRight(1).goDown(1), goLeft(1).goUp(1),
+            goRight(1).goUp(1), goLeft(1).goDown(1)
+        };
+    }
 }

@@ -5,64 +5,75 @@ class Fleet {
     private static final int MAX_ROWS = 10;
     private static final int MAX_COLS = 10;
 
-    private final Ship[][] fleet = new Ship[MAX_ROWS][MAX_COLS];
+    private final Ship[][] grid;
+    private final boolean[][] compromised;
 
-    private final boolean[][] compromised = new boolean[MAX_ROWS][MAX_COLS];
-
-    public void placeShip(Ship aShip, Coordinate coords) {
-        placeShip(aShip, coords, new HorizontalPlacementStrategy());
+    public Fleet() {
+        grid = new Ship[MAX_ROWS][MAX_COLS];
+        compromised = new boolean[MAX_ROWS][MAX_COLS];
     }
 
-    public void placeShipVertically(Ship aShip, Coordinate coords) {
-        placeShip(aShip, coords, new VerticalPlacementStrategy());
+    public void placeShipHorizontally(Ship ship, Coordinate coords) {
+        validateShipCoords(ship, coords);
+
+        for (int i = 0; i < ship.size(); i++) {
+            if (isCompromised(coords.goRight(i))) {
+                throw new CoordinateAlreadyOccupiedException();
+            }
+        }
+
+        for (int i = coords.x(); i < coords.x() + ship.size(); i++) {
+            grid[coords.y()][i] = ship;
+            compromiseNearbyCoordinates(coords.goRight(i - coords.x()));
+        }
+    }
+
+    public void placeShipVertically(Ship ship, Coordinate coords) {
+        validateShipCoords(ship, coords);
+
+        for (int i = 0; i < ship.size(); i++) {
+            if (isCompromised(coords.goDown(i))) {
+                throw new CoordinateAlreadyOccupiedException();
+            }
+        }
+
+        for (int i = coords.y(); i < coords.y() + ship.size(); i++) {
+            grid[i][coords.x()] = ship;
+            compromiseNearbyCoordinates(coords.goDown(i - coords.y()));
+        }
     }
 
     public Ship shipAt(Coordinate pos) {
-        return fleet[pos.y()][pos.x()];
+        return grid[pos.y()][pos.x()];
     }
 
-    private void placeShip(Ship ship, Coordinate coords, PlacementStrategy placementStrategy) {
-        if (!isCoordinateWithinBounds(coords) || !shipSizeFitsCoordinate(ship, coords)) {
+    private void validateShipCoords(Ship ship, Coordinate coords) {
+        if (!isWithinBounds(coords) || !shipSizeFitsCoordinate(ship, coords)) {
             throw new OutOfFleetBoundsException();
         }
 
         if (shipAt(coords) != null) {
             throw new CoordinateAlreadyOccupiedException();
         }
-
-        placementStrategy.placeShip(ship, coords);
     }
 
-    private boolean isCoordinateWithinBounds(Coordinate pos) {
-        return pos.x() <= MAX_ROWS && pos.y() <= MAX_COLS;
+    private boolean isCompromised(Coordinate pos) {
+        return compromised[pos.y()][pos.x()];
     }
 
     private boolean shipSizeFitsCoordinate(Ship ship, Coordinate pos) {
-        return ship.size() + pos.x() <= MAX_COLS;
+        return isWithinBounds(pos.goRight(ship.size()));
     }
 
-    private interface PlacementStrategy {
-
-        void placeShip(Ship aShip, Coordinate coords);
-    }
-
-    private class VerticalPlacementStrategy implements PlacementStrategy {
-
-        @Override
-        public void placeShip(Ship ship, Coordinate coords) {
-            for (int i = coords.y(); i < coords.y() + ship.size(); i += 1) {
-                fleet[i][coords.x()] = ship;
+    private void compromiseNearbyCoordinates(Coordinate coords) {
+        for (Coordinate c : coords.getNearbyCoordinates()) {
+            if (isWithinBounds(c)) {
+                compromised[c.y()][c.x()] = true;
             }
         }
     }
 
-    private class HorizontalPlacementStrategy implements PlacementStrategy {
-
-        @Override
-        public void placeShip(Ship ship, Coordinate coords) {
-            for (int i = coords.x(); i < coords.x() + ship.size(); i += 1) {
-                fleet[coords.y()][i] = ship;
-            }
-        }
+    private boolean isWithinBounds(Coordinate pos) {
+        return pos.x() <= MAX_ROWS && pos.y() <= MAX_COLS && !(pos.x() < 0 || pos.y() < 0);
     }
 }
