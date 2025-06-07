@@ -1,6 +1,6 @@
 package com.battleship;
 
-class Fleet {
+public class Fleet {
 
     private static final int MAX_ROWS = 10;
     private static final int MAX_COLS = 10;

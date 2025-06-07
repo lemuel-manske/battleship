@@ -1,41 +1,26 @@
 package com.battleship;
 
-public class Ship {
+public interface Ship {
 
-    private static final String PRINT_FORMAT = "[ size=%d ]";
-
-    private final int size;
-
-    private Ship(final int size) {
-        this.size = size;
+    static Ship patrolBoat() {
+        return new PatrolBoat();
     }
 
-    public static Ship patrolBoat() {
-        return new Ship(2);
+    static Ship submarine() {
+        return new Submarine();
     }
 
-    public static Ship submarine() {
-        return new Ship(3);
+    static Ship destroyer() {
+        return new Destroyer();
     }
 
-    public static Ship destroyer() {
-        return new Ship(3);
+    static Ship battleship() {
+        return new Battleship();
     }
 
-    public static Ship battleship() {
-        return new Ship(4);
+    static Ship carrier() {
+        return new Carrier();
     }
 
-    public static Ship carrier() {
-        return new Ship(5);
-    }
-
-    public int size() {
-        return size;
-    }
-
-    @Override
-    public String toString() {
-        return PRINT_FORMAT.formatted(size);
-    }
+    int size();
 }
