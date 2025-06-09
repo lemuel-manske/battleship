@@ -33,6 +33,26 @@ public class Fleet {
         placeShipAlongPath(ship, initialCoords.goDownUntil(finalCoords));
     }
 
+    public boolean anyShipAt(Coordinate coords) {
+        if (!isWithinBounds(coords)) {
+            throw new OutOfFleetBoundsException();
+        }
+
+        return ships[coords.y()][coords.x()] != null;
+    }
+
+    public Ship getShipAt(Coordinate coords) {
+        return ships[coords.y()][coords.x()];
+    }
+
+    public Ship shootShipAt(Coordinate coords) {
+        Ship ship = ships[coords.y()][coords.x()];
+
+        ships[coords.y()][coords.x()] = null;
+
+        return ship;
+    }
+
     private void placeShipAlongPath(Ship ship, Coordinate[] path) {
         for (Coordinate c : path) {
             if (isCompromised(c)) {
@@ -45,10 +65,6 @@ public class Fleet {
             compromised[c.y()][c.x()] = true;
             compromiseNearbyCoordinates(c);
         }
-    }
-
-    public Ship shipAt(Coordinate pos) {
-        return ships[pos.y()][pos.x()];
     }
 
     private boolean canMakePath(Coordinate start, Coordinate end) {

@@ -32,12 +32,12 @@ class FleetTest {
 
         @Test
         void whenAnyShipIsPlacedOutOfFleetSouthBounds_ThenThrowOutOfFleetBoundsException() {
-            assertThrows(OutOfFleetBoundsException.class, () -> fleet.placeShipHorizontally(anyShip(), Coordinate.valueOf(11, 7)));
+            assertThrows(OutOfFleetBoundsException.class, () -> fleet.placeShipHorizontally(anyShip(), Coordinate.valueOf(7, 11)));
         }
 
         @Test
         void whenAnyShipIsPlacedOutOfFleetEastBounds_ThenThrowOutOfFleetBoundsException() {
-            assertThrows(OutOfFleetBoundsException.class, () -> fleet.placeShipHorizontally(anyShip(), Coordinate.valueOf(8, 12)));
+            assertThrows(OutOfFleetBoundsException.class, () -> fleet.placeShipHorizontally(anyShip(), Coordinate.valueOf(12, 8)));
         }
 
         @Test
@@ -159,13 +159,13 @@ class FleetTest {
 
     private void assertThatShipIsAtCoordinateMovingRight(Ship ship, Coordinate expectedCoords) {
         for (int i = 0; i < ship.size(); i++) {
-            assertSame(ship, fleet.shipAt(expectedCoords.goRightBy(i)));
+            assertSame(ship, fleet.getShipAt(expectedCoords.goRightBy(i)));
         }
     }
 
     private void assertThatShipIsAtCoordinateMovingDown(Ship ship, Coordinate expectedCoords) {
         for (int i = 0; i < ship.size(); i++) {
-            assertSame(ship, fleet.shipAt(expectedCoords.goDownBy(i)));
+            assertSame(ship, fleet.getShipAt(expectedCoords.goDownBy(i)));
         }
     }
 
@@ -178,7 +178,7 @@ class FleetTest {
     }
 
     private void assertNoShipAt(Coordinate coords) {
-        assertNull(fleet.shipAt(coords));
+        assertNull(fleet.getShipAt(coords));
     }
 
     private void assertThatNearbyCoordinatesAreOccupied(Coordinate coords) {

@@ -8,11 +8,27 @@ public class Board {
         this.fleet = fleet;
     }
 
-    public void placeShip(Ship ship, Coordinate coordinate) {
+    public void placeShipHorizontally(Ship ship, Coordinate coordinate) {
         fleet.placeShipHorizontally(ship, coordinate);
     }
 
+    public void placeShipVertically(Ship ship, Coordinate coordinate) {
+        fleet.placeShipVertically(ship, coordinate);
+    }
+
     public Ship getShipAt(Coordinate coordinate) {
-        return fleet.shipAt(coordinate);
+        return fleet.getShipAt(coordinate);
+    }
+
+    public Strike attack(Coordinate coordinate) {
+        if (!fleet.anyShipAt(coordinate)) {
+            return new Miss();
+        }
+
+        Ship shotShip = fleet.shootShipAt(coordinate);
+
+        shotShip.hit();
+
+        return new Hit();
     }
 }

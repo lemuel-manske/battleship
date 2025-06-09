@@ -1,6 +1,15 @@
 package com.battleship;
 
-public interface Ship {
+public sealed abstract class Ship permits
+    PatrolBoat,
+    Submarine,
+    Destroyer,
+    Battleship,
+    Carrier {
+
+    private int timesHit;
+
+    abstract int size();
 
     static Ship patrolBoat() {
         return new PatrolBoat();
@@ -22,5 +31,11 @@ public interface Ship {
         return new Carrier();
     }
 
-    int size();
+    public boolean isSunk() {
+        return timesHit == size();
+    }
+
+    public void hit() {
+        timesHit++;
+    }
 }

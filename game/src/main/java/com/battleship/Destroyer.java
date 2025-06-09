@@ -1,6 +1,6 @@
 package com.battleship;
 
-public final class Destroyer implements Ship {
+public final class Destroyer extends Ship {
 
     private static final String PRINT_FORMAT = "Destroyer: [ size=%d ]";
 
