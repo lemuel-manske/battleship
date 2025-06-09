@@ -33,7 +33,23 @@ public class Fleet {
         placeShipAlongPath(ship, initialCoords.goDownUntil(finalCoords));
     }
 
-    public boolean anyShipAt(Coordinate coords) {
+    public Ship getShipAt(Coordinate coords) {
+        return ships[coords.y()][coords.x()];
+    }
+
+    public Strike shootShip(Coordinate coords) {
+        if (!anyShipAt(coords)) {
+            return new Miss();
+        }
+
+        Ship shotShip = shootShipAt(coords);
+
+        shotShip.hit();
+
+        return new Hit();
+    }
+
+    private boolean anyShipAt(Coordinate coords) {
         if (!isWithinBounds(coords)) {
             throw new OutOfFleetBoundsException();
         }
@@ -41,11 +57,7 @@ public class Fleet {
         return ships[coords.y()][coords.x()] != null;
     }
 
-    public Ship getShipAt(Coordinate coords) {
-        return ships[coords.y()][coords.x()];
-    }
-
-    public Ship shootShipAt(Coordinate coords) {
+    private Ship shootShipAt(Coordinate coords) {
         Ship ship = ships[coords.y()][coords.x()];
 
         ships[coords.y()][coords.x()] = null;
