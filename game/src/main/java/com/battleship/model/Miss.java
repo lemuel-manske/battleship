@@ -1,4 +1,4 @@
-package com.battleship;
+package com.battleship.model;
 
 public final class Miss implements Strike {
 

@@ -1,4 +1,4 @@
-package com.battleship;
+package com.battleship.model;
 
 public class OutOfFleetBoundsException extends RuntimeException {
 }

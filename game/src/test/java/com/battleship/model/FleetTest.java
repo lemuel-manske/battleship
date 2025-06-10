@@ -1,4 +1,4 @@
-package com.battleship;
+package com.battleship.model;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;

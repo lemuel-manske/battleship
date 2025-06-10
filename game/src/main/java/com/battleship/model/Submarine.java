@@ -1,8 +1,8 @@
-package com.battleship;
+package com.battleship.model;
 
-public final class Destroyer extends Ship {
+public final class Submarine extends Ship {
 
-    private static final String PRINT_FORMAT = "Destroyer: [ size=%d ]";
+    private static final String PRINT_FORMAT = "Submarine: [ size=%d ]";
 
     @Override
     public int size() {

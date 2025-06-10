@@ -1,8 +1,11 @@
 [versions]
 junitVersion = "5.10.0"
+springBootVersion = "3.2.6"
 
 [libraries]
 
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junitVersion" }
 junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitVersion" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
+
+spring-boot-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket", version.ref = "springBootVersion" }
