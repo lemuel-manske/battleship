@@ -1,16 +1,29 @@
 package com.battleship.model;
 
+import com.battleship.Coordinate;
+import java.util.UUID;
+
 public class Fleet {
 
     private static final int MAX_ROWS = 10;
     private static final int MAX_COLS = 10;
 
+    private final UUID id;
     private final Ship[][] ships;
     private final boolean[][] compromised;
 
     public Fleet() {
+        this(UUID.randomUUID());
+    }
+
+    public Fleet(UUID fleetId) {
+        id = fleetId;
         ships = new Ship[MAX_ROWS][MAX_COLS];
         compromised = new boolean[MAX_ROWS][MAX_COLS];
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public void placeShipHorizontally(Ship ship, Coordinate initialCoords) {

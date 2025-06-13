@@ -1,11 +1,13 @@
 package com.battleship.model;
 
+import static com.battleship.FleetAssertions.assertNoShipAtCoords;
+import static com.battleship.FleetAssertions.assertThatShipIsAtCoordinateMovingDown;
+import static com.battleship.FleetAssertions.assertThatShipIsAtCoordinateMovingRight;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.battleship.Coordinate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,7 +67,7 @@ class FleetTest {
 
             fleet.placeShipHorizontally(aShip, coords);
 
-            assertThatShipIsAtCoordinateMovingRight(aShip, coords);
+            assertThatShipIsAtCoordinateMovingRight(aShip, coords, fleet);
         }
 
         @Test
@@ -76,7 +78,7 @@ class FleetTest {
 
             fleet.placeShipVertically(aShip, coords);
 
-            assertThatShipIsAtCoordinateMovingDown(aShip, coords);
+            assertThatShipIsAtCoordinateMovingDown(aShip, coords, FleetTest.this.fleet);
         }
 
         @Test
@@ -87,7 +89,7 @@ class FleetTest {
 
             fleet.placeShipHorizontally(aShip, coords);
 
-            assertNoShipAt(coords.goRightBy(aShip.size()));
+            assertNoShipAtCoords(coords.goRightBy(aShip.size()), FleetTest.this.fleet);
         }
 
         @Nested
@@ -134,7 +136,7 @@ class FleetTest {
 
                 fleet.placeShipVertically(shipToPlace, coords);
 
-                assertThatShipIsAtCoordinateMovingDown(shipToPlace, coords);
+                assertThatShipIsAtCoordinateMovingDown(shipToPlace, coords, fleet);
             }
 
             @Test
@@ -209,7 +211,7 @@ class FleetTest {
 
             fleet.shootShip(coordinate);
 
-            assertNull(fleet.getShipAt(coordinate));
+            assertNoShipAtCoords(coordinate, fleet);
         }
 
         @Test
@@ -236,28 +238,12 @@ class FleetTest {
         }
     }
 
-    private void assertThatShipIsAtCoordinateMovingRight(Ship ship, Coordinate expectedCoords) {
-        for (int i = 0; i < ship.size(); i++) {
-            assertSame(ship, fleet.getShipAt(expectedCoords.goRightBy(i)));
-        }
-    }
-
-    private void assertThatShipIsAtCoordinateMovingDown(Ship ship, Coordinate expectedCoords) {
-        for (int i = 0; i < ship.size(); i++) {
-            assertSame(ship, fleet.getShipAt(expectedCoords.goDownBy(i)));
-        }
-    }
-
     private void assertThatShipsInvadeOccupiedAreaVertically(Ship shipToPlace, Coordinate coordinate) {
         assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipVertically(shipToPlace, coordinate));
     }
 
     private void assertThatShipsInvadeOccupiedAreaHorizontally(Ship ship, Coordinate coords) {
         assertThrows(CoordinateAlreadyOccupiedException.class, () -> fleet.placeShipHorizontally(ship, coords));
-    }
-
-    private void assertNoShipAt(Coordinate coords) {
-        assertNull(fleet.getShipAt(coords));
     }
 
     private void assertThatNearbyCoordinatesAreOccupied(Coordinate coords) {

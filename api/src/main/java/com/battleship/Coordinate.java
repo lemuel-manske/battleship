@@ -1,4 +1,4 @@
-package com.battleship.model;
+package com.battleship;
 
 public class Coordinate {
 

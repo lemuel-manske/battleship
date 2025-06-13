@@ -9,25 +9,25 @@ public sealed abstract class Ship permits
 
     private int timesHit;
 
-    abstract int size();
+    public abstract int size();
 
-    static Ship patrolBoat() {
+    public static Ship patrolBoat() {
         return new PatrolBoat();
     }
 
-    static Ship submarine() {
+    public static Ship submarine() {
         return new Submarine();
     }
 
-    static Ship destroyer() {
+    public static Ship destroyer() {
         return new Destroyer();
     }
 
-    static Ship battleship() {
+    public static Ship battleship() {
         return new Battleship();
     }
 
-    static Ship carrier() {
+    public static Ship carrier() {
         return new Carrier();
     }
 
@@ -37,5 +37,20 @@ public sealed abstract class Ship permits
 
     public void hit() {
         timesHit++;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Ship ship = (Ship) obj;
+
+        return size() == ship.size() && timesHit == ship.timesHit;
     }
 }
