@@ -1,6 +1,6 @@
 package com.battleship;
 
-public interface PlaceServiceShip extends Service {
+public interface PlaceShipService extends Service {
 
     void placeShip(ShipDto shipToPlace);
 }

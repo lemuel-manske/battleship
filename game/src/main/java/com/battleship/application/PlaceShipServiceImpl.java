@@ -2,12 +2,12 @@ package com.battleship.application;
 
 import static com.battleship.application.ShipAssembler.assembleShip;
 
-import com.battleship.PlaceServiceShip;
+import com.battleship.PlaceShipService;
 import com.battleship.ShipDto;
 import com.battleship.model.Fleet;
 import com.battleship.model.FleetRepository;
 
-public class PlaceShipServiceImpl implements PlaceServiceShip {
+public class PlaceShipServiceImpl implements PlaceShipService {
 
     private final Fleet fleet;
 

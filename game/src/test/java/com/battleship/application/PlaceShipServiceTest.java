@@ -3,9 +3,8 @@ package com.battleship.application;
 import static com.battleship.FleetAssertions.assertThatShipIsAtCoordinateMovingRight;
 
 import com.battleship.Coordinate;
-import com.battleship.PlaceServiceShip;
+import com.battleship.PlaceShipService;
 import com.battleship.ShipDto;
-import com.battleship.ShipType;
 import com.battleship.model.Fleet;
 import com.battleship.model.FleetRepository;
 import com.battleship.model.Ship;
@@ -16,7 +15,7 @@ class PlaceShipServiceTest {
 
     private Session session;
 
-    private PlaceServiceShip placeShipService;
+    private PlaceShipService placeShipService;
     private FleetRepository fleetRepository;
 
     @BeforeEach
@@ -31,7 +30,7 @@ class PlaceShipServiceTest {
 
     @Test
     void givenFreshFleet_whenShipIsPlaced_thenRetrieveShipAtSpecifiedPosition() {
-        ShipDto shipToPlace = new ShipDto(ShipType.BATTLESHIP, Coordinate.valueOf(1, 3));
+        ShipDto shipToPlace = new ShipDto(ShipDto.Type.BATTLESHIP, Coordinate.valueOf(1, 3));
 
         placeShipService.placeShip(shipToPlace);
 
