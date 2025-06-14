@@ -2,28 +2,25 @@ package com.battleship.application;
 
 import com.battleship.model.Fleet;
 import com.battleship.model.FleetRepository;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class FleetRepositoryStub implements FleetRepository {
 
-    private final List<Fleet> fleets;
+    private final Map<UUID, Fleet> fleets;
 
     public FleetRepositoryStub() {
-        this.fleets = new ArrayList<>();
+        this.fleets = new HashMap<>();
     }
 
     @Override
     public Fleet getById(UUID fleetId) {
-        return fleets.stream()
-            .filter(fleet -> fleet.getId().equals(fleetId))
-            .findFirst()
-            .orElseThrow();
+        return fleets.get(fleetId);
     }
 
     @Override
     public void add(Fleet fleet) {
-        fleets.add(fleet);
+        fleets.put(fleet.getId(), fleet);
     }
 }
