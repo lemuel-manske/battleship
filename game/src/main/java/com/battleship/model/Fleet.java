@@ -1,6 +1,7 @@
 package com.battleship.model;
 
 import com.battleship.Coordinate;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Fleet {
@@ -9,6 +10,7 @@ public class Fleet {
     private static final int MAX_COLS = 10;
 
     private final UUID id;
+
     private final Ship[][] ships;
     private final boolean[][] compromised;
 
@@ -47,7 +49,7 @@ public class Fleet {
     }
 
     public Ship getShipAt(Coordinate coords) {
-        return ships[coords.y()][coords.x()];
+        return getShip(coords);
     }
 
     public Strike shootShip(Coordinate coords) {
@@ -67,28 +69,28 @@ public class Fleet {
             throw new OutOfFleetBoundsException();
         }
 
-        return ships[coords.y()][coords.x()] != null;
+        return getShip(coords) != null;
     }
 
     private Ship shootShipAt(Coordinate coords) {
-        Ship ship = ships[coords.y()][coords.x()];
+        Ship ship = getShip(coords);
 
-        ships[coords.y()][coords.x()] = null;
+        setShip(coords, null);
 
         return ship;
     }
 
     private void placeShipAlongPath(Ship ship, Coordinate[] path) {
-        for (Coordinate c : path) {
-            if (isCompromised(c)) {
+        for (Coordinate coords : path) {
+            if (isCompromised(coords)) {
                 throw new CoordinateAlreadyOccupiedException();
             }
         }
 
-        for (Coordinate c : path) {
-            ships[c.y()][c.x()] = ship;
-            compromised[c.y()][c.x()] = true;
-            compromiseNearbyCoordinates(c);
+        for (Coordinate coords : path) {
+            setShip(coords, ship);
+            setCompromised(coords);
+            compromiseNearbyCoordinates(coords);
         }
     }
 
@@ -96,19 +98,29 @@ public class Fleet {
         return !isWithinBounds(start) || !isWithinBounds(end);
     }
 
-    private boolean isCompromised(Coordinate pos) {
-        return compromised[pos.y()][pos.x()];
-    }
-
     private void compromiseNearbyCoordinates(Coordinate coords) {
-        for (Coordinate c : coords.getNearbyCoordinates()) {
-            if (isWithinBounds(c)) {
-                compromised[c.y()][c.x()] = true;
-            }
-        }
+        Arrays.stream(coords.getNearbyCoordinates())
+            .filter(this::isWithinBounds)
+            .forEach(this::setCompromised);
     }
 
     private boolean isWithinBounds(Coordinate pos) {
-        return pos.x() <= MAX_ROWS && pos.y() <= MAX_COLS && !(pos.x() < 0 || pos.y() < 0);
+        return pos.row() <= MAX_ROWS && pos.column() <= MAX_COLS && !(pos.row() < 0 || pos.column() < 0);
+    }
+
+    private boolean isCompromised(Coordinate pos) {
+        return compromised[pos.column()][pos.row()];
+    }
+
+    private void setCompromised(Coordinate c) {
+        compromised[c.column()][c.row()] = true;
+    }
+
+    private void setShip(Coordinate coords, Ship ship) {
+        ships[coords.row()][coords.column()] = ship;
+    }
+
+    private Ship getShip(Coordinate coords) {
+        return ships[coords.row()][coords.column()];
     }
 }

@@ -2,40 +2,40 @@ package com.battleship;
 
 public class Coordinate {
 
-    private final int x;
-    private final int y;
+    private final int row;
+    private final int column;
 
-    private Coordinate(int x, int y) {
-        this.x = x;
-        this.y = y;
+    private Coordinate(int row, int column) {
+        this.row = row;
+        this.column = column;
     }
 
-    public static Coordinate valueOf(int x, int y) {
-        return new Coordinate(x, y);
+    public static Coordinate valueOf(int row, int column) {
+        return new Coordinate(row, column);
     }
 
-    public int x() {
-        return x;
+    public int row() {
+        return row;
     }
 
-    public int y() {
-        return y;
+    public int column() {
+        return column;
     }
 
     public Coordinate goRightBy(int by) {
-        return new Coordinate(this.x + by, y);
+        return new Coordinate(row() + by, column());
     }
 
     public Coordinate goDownBy(int by) {
-        return new Coordinate(x, this.y + by);
+        return new Coordinate(row(), column() + by);
     }
 
     public Coordinate goLeftBy(int by) {
-        return new Coordinate(this.x - by, y);
+        return new Coordinate(row() - by, column());
     }
 
     public Coordinate goUpBy(int by) {
-        return new Coordinate(x, this.y - by);
+        return new Coordinate(row(), column() - by);
     }
 
     public Coordinate[] getNearbyCoordinates() {
@@ -48,9 +48,9 @@ public class Coordinate {
     }
 
     public Coordinate[] goRightUntil(Coordinate finalCoords) {
-        Coordinate[] path = new Coordinate[finalCoords.x - x];
+        Coordinate[] path = new Coordinate[finalCoords.row - row()];
 
-        for (int i = 0; i < finalCoords.x - x; i++) {
+        for (int i = 0; i < finalCoords.row - row(); i++) {
             path[i] = goRightBy(i);
         }
 
@@ -58,9 +58,9 @@ public class Coordinate {
     }
 
     public Coordinate[] goDownUntil(Coordinate finalCoords) {
-        Coordinate[] path = new Coordinate[finalCoords.y - y];
+        Coordinate[] path = new Coordinate[finalCoords.column - column()];
 
-        for (int i = 0; i < finalCoords.y - y; i++) {
+        for (int i = 0; i < finalCoords.column - column(); i++) {
             path[i] = goDownBy(i);
         }
 
