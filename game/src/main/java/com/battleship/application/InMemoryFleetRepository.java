@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class FleetRepositoryStub implements FleetRepository {
+public class InMemoryFleetRepository implements FleetRepository {
 
     private final Map<UUID, Fleet> fleets;
 
-    public FleetRepositoryStub() {
+    public InMemoryFleetRepository() {
         this.fleets = new HashMap<>();
     }
 

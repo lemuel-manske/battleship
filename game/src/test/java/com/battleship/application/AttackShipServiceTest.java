@@ -7,24 +7,17 @@ import com.battleship.AttackShipService;
 import com.battleship.Coordinate;
 import com.battleship.MissShotException;
 import com.battleship.model.Fleet;
-import com.battleship.model.FleetRepository;
 import com.battleship.model.Ship;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class AttackShipServiceTest {
-
-    private Session session;
+class AttackShipServiceTest extends ServiceTest {
 
     private AttackShipService attackShipService;
-    private FleetRepository fleetRepository;
 
     @BeforeEach
     void setUp() {
-        session = new SessionStub();
-        fleetRepository = new FleetRepositoryStub();
-
-        fleetRepository.add(new Fleet(session.getFleetId()));
+        fleetRepository.add(Fleet.withId(session.getFleetId()));
 
         attackShipService = new AttackShipServiceImpl(session, fleetRepository);
     }

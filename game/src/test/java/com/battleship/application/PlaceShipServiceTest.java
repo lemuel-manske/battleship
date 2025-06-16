@@ -8,24 +8,17 @@ import com.battleship.PlaceShipService;
 import com.battleship.ShipDto;
 import com.battleship.model.CoordinateAlreadyOccupiedException;
 import com.battleship.model.Fleet;
-import com.battleship.model.FleetRepository;
 import com.battleship.model.Ship;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class PlaceShipServiceTest {
-
-    private Session session;
+class PlaceShipServiceTest extends ServiceTest {
 
     private PlaceShipService placeShipService;
-    private FleetRepository fleetRepository;
 
     @BeforeEach
     void setUp() {
-        session = new SessionStub();
-        fleetRepository = new FleetRepositoryStub();
-
-        fleetRepository.add(new Fleet(session.getFleetId()));
+        fleetRepository.add(Fleet.withId(session.getFleetId()));
 
         placeShipService = new PlaceShipServiceImpl(session, fleetRepository);
     }

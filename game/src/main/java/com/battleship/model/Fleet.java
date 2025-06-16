@@ -14,14 +14,12 @@ public class Fleet {
     private final Ship[][] ships;
     private final boolean[][] compromised;
 
-    public Fleet() {
-        this(UUID.randomUUID());
+    public static Fleet create() {
+        return new Fleet();
     }
 
-    public Fleet(UUID fleetId) {
-        id = fleetId;
-        ships = new Ship[MAX_ROWS][MAX_COLS];
-        compromised = new boolean[MAX_ROWS][MAX_COLS];
+    public static Fleet withId(UUID fleetId) {
+        return new Fleet(fleetId);
     }
 
     public UUID getId() {
@@ -122,5 +120,15 @@ public class Fleet {
 
     private Ship getShip(Coordinate coords) {
         return ships[coords.row()][coords.column()];
+    }
+
+    private Fleet() {
+        this(UUID.randomUUID());
+    }
+
+    private Fleet(UUID fleetId) {
+        id = fleetId;
+        ships = new Ship[MAX_ROWS][MAX_COLS];
+        compromised = new boolean[MAX_ROWS][MAX_COLS];
     }
 }

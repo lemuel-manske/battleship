@@ -21,7 +21,7 @@ class FleetTest {
 
         @BeforeEach
         void setUpFleet() {
-            fleet = new Fleet();
+            fleet = Fleet.create();
         }
 
         @Test
