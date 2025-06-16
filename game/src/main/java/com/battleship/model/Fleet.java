@@ -29,24 +29,24 @@ public class Fleet {
     public void placeShipHorizontally(Ship ship, Coordinate initialCoords) {
         Coordinate finalCoords = initialCoords.goRightBy(ship.size());
 
-        if (canMakePath(initialCoords, finalCoords)) {
-            throw new OutOfFleetBoundsException();
-        }
+        Coordinate[] path = initialCoords.goRightUntil(finalCoords);
 
-        placeShipAlongPath(ship, initialCoords.goRightUntil(finalCoords));
+        placeShipAlongPath(ship, path);
     }
 
     public void placeShipVertically(Ship ship, Coordinate initialCoords) {
         Coordinate finalCoords = initialCoords.goDownBy(ship.size());
 
-        if (canMakePath(initialCoords, finalCoords)) {
-            throw new OutOfFleetBoundsException();
-        }
+        Coordinate[] path = initialCoords.goDownUntil(finalCoords);
 
-        placeShipAlongPath(ship, initialCoords.goDownUntil(finalCoords));
+        placeShipAlongPath(ship, path);
     }
 
     public Ship getShipAt(Coordinate coords) {
+        if (!isWithinBounds(coords)) {
+            throw new OutOfFleetBoundsException();
+        }
+
         return getShip(coords);
     }
 
@@ -79,6 +79,10 @@ public class Fleet {
     }
 
     private void placeShipAlongPath(Ship ship, Coordinate[] path) {
+        if (!canMakePath(path)) {
+            throw new OutOfFleetBoundsException();
+        }
+
         for (Coordinate coords : path) {
             if (isCompromised(coords)) {
                 throw new CoordinateAlreadyOccupiedException();
@@ -92,8 +96,11 @@ public class Fleet {
         }
     }
 
-    private boolean canMakePath(Coordinate start, Coordinate end) {
-        return !isWithinBounds(start) || !isWithinBounds(end);
+    private boolean canMakePath(Coordinate[] path) {
+        Coordinate start = path[0];
+        Coordinate end = path[path.length - 1];
+
+        return isWithinBounds(start) && isWithinBounds(end);
     }
 
     private void compromiseNearbyCoordinates(Coordinate coords) {
@@ -103,7 +110,7 @@ public class Fleet {
     }
 
     private boolean isWithinBounds(Coordinate pos) {
-        return pos.row() <= MAX_ROWS && pos.column() <= MAX_COLS && !(pos.row() < 0 || pos.column() < 0);
+        return pos.row() < MAX_ROWS && pos.column() <= MAX_COLS && !(pos.row() < 0 || pos.column() < 0);
     }
 
     private boolean isCompromised(Coordinate pos) {
