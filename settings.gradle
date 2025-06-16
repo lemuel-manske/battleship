@@ -1,8 +1,5 @@
 rootProject.name = rootDir.name
 
-include ':game'
-
-include 'core'
-include 'api'
-include 'application'
-include 'api'
+include ':api'
+include ':core'
+include ':application'
