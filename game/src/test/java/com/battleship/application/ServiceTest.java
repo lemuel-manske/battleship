@@ -1,5 +1,6 @@
 package com.battleship.application;
 
+import com.battleship.adapter.persistence.InMemoryFleetRepository;
 import com.battleship.model.FleetRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;

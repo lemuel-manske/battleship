@@ -1,4 +1,4 @@
-package com.battleship.application;
+package com.battleship.adapter.persistence;
 
 import com.battleship.model.Fleet;
 import com.battleship.model.FleetRepository;
