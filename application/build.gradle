@@ -1,4 +1,5 @@
 
 dependencies {
     implementation libs.spring.boot.websocket
+    implementation libs.spring.boot.starter.actuator
 }

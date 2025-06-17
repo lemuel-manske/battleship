@@ -9,3 +9,4 @@ junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.re
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitVersion" }
 
 spring-boot-websocket = { module = "org.springframework.boot:spring-boot-starter-websocket", version.ref = "springBootVersion" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "springBootVersion" }
